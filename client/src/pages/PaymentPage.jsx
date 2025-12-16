@@ -1,0 +1,186 @@
+
+
+// import { useLocation, useNavigate } from "react-router-dom";
+// import { useCart } from "../context/CartContext";
+// import { useState } from "react";
+
+// const PaymentPage = () => {
+//   const { state } = useLocation();
+//   const navigate = useNavigate();
+//   const { cart, clearCart } = useCart();
+//   const [method, setMethod] = useState("UPI");
+
+//   if (!state) {
+//     navigate("/");
+//     return null;
+//   }
+
+//   const payNow = async () => {
+//     try {
+//       const token = localStorage.getItem("token");
+
+//       if (!token) {
+//         alert("Please login to place order");
+//         navigate("/login");
+//         return;
+//       }
+
+//       const res = await fetch("http://localhost:8000/api/orders", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         credentials: "include",
+//         body: JSON.stringify({
+//           items: cart,
+//           totalAmount: state.total,
+//           paymentMethod: method,
+//           address: state.address,
+//         }),
+//       });
+
+//       const data = await res.json();
+
+//       if (!res.ok) {
+//         alert(data.message || "Order failed");
+//         return;
+//       }
+
+//       clearCart();
+//       navigate("/order-success");
+//     } catch (error) {
+//       alert("Something went wrong while placing order");
+//     }
+//   };
+
+//   return (
+//     <div className="p-6 bg-gray-100 min-h-screen max-w-3xl mx-auto">
+//       <h1 className="text-3xl font-bold mb-6">Payment</h1>
+
+//       <div className="bg-white p-4 rounded-xl shadow mb-6">
+//         <h2 className="font-semibold mb-4">Choose Payment Method</h2>
+
+//         {["UPI", "Card", "Cash on Delivery"].map((m) => (
+//           <label key={m} className="flex gap-3 mb-3">
+//             <input
+//               type="radio"
+//               checked={method === m}
+//               onChange={() => setMethod(m)}
+//             />
+//             {m}
+//           </label>
+//         ))}
+//       </div>
+
+//       <div className="bg-white p-4 rounded-xl shadow flex justify-between items-center">
+//         <span className="text-xl font-bold">₹{state.total}</span>
+//         <button
+//           onClick={payNow}
+//           className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold"
+//         >
+//           Pay & Place Order
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PaymentPage;
+
+
+
+
+
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { useState } from "react";
+
+const PaymentPage = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const { cart, clearCart } = useCart();
+  const [method, setMethod] = useState("UPI");
+  const [loading, setLoading] = useState(false);
+
+  // If user directly opens /payment
+  if (!state) {
+    navigate("/");
+    return null;
+  }
+
+  const payNow = async () => {
+    try {
+      setLoading(true);
+
+      const res = await fetch("http://localhost:8000/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // 🔥 SEND COOKIE
+        body: JSON.stringify({
+          items: cart,
+          totalAmount: state.total,
+          paymentMethod: method,
+          address: state.address,
+        }),
+      });
+
+      const data = await res.json();
+
+      // 🔐 If not logged in
+      if (res.status === 401) {
+        alert("Please login to place order");
+        navigate("/login");
+        return;
+      }
+
+      if (!res.ok) {
+        alert(data.message || "Order failed");
+        return;
+      }
+
+      clearCart();
+      navigate("/order-success");
+    } catch (error) {
+      alert("Something went wrong while placing order");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="p-6 bg-gray-100 min-h-screen max-w-3xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Payment</h1>
+
+      <div className="bg-white p-4 rounded-xl shadow mb-6">
+        <h2 className="font-semibold mb-4">Choose Payment Method</h2>
+
+        {["UPI", "Card", "Cash on Delivery"].map((m) => (
+          <label key={m} className="flex gap-3 mb-3 cursor-pointer">
+            <input
+              type="radio"
+              checked={method === m}
+              onChange={() => setMethod(m)}
+            />
+            {m}
+          </label>
+        ))}
+      </div>
+
+      <div className="bg-white p-4 rounded-xl shadow flex justify-between items-center">
+        <span className="text-xl font-bold">₹{state.total}</span>
+        <button
+          onClick={payNow}
+          disabled={loading}
+          className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
+        >
+          {loading ? "Placing Order..." : "Pay & Place Order"}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default PaymentPage;
