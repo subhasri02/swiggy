@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+ 
 const menuItemSchema = new mongoose.Schema({
   itemId: String,
   name: String,
@@ -9,7 +9,7 @@ const menuItemSchema = new mongoose.Schema({
   isVeg: Boolean,
   category: String,
 });
-
+ 
 const menuSchema = new mongoose.Schema(
   {
     restaurantId: {
@@ -22,5 +22,7 @@ const menuSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+ 
 export default mongoose.model("Menu", menuSchema);
+ 
+ 

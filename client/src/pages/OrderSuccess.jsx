@@ -1,23 +1,37 @@
 
-import { useNavigate } from "react-router-dom";
+
+import { Link } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
 
 const OrderSuccess = () => {
-  const navigate = useNavigate();
-
   return (
-    <div className="h-[70vh] flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold text-green-600 mb-4">
-        🎉 Order Placed Successfully!
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6">
+      <FaCheckCircle className="text-green-500 text-6xl mb-4" />
+
+      <h1 className="text-3xl font-bold mb-2">
+        Order Placed Successfully 🎉
       </h1>
-      <p className="text-gray-500 mb-6">
-        Your food is on the way 🍕
+
+      <p className="text-gray-600 mb-6">
+        Thank you for ordering with FoodBite.  
+        A confirmation message has been sent to you.
       </p>
-      <button
-        onClick={() => navigate("/")}
-        className="bg-orange-500 text-white px-6 py-3 rounded-lg"
-      >
-        Back to Home
-      </button>
+
+      <div className="flex gap-4">
+        <Link
+          to="/orders"
+          className="bg-orange-500 text-white px-6 py-3 rounded-lg"
+        >
+          View My Orders
+        </Link>
+
+        <Link
+          to="/"
+          className="border border-orange-500 text-orange-500 px-6 py-3 rounded-lg"
+        >
+          Go Home
+        </Link>
+      </div>
     </div>
   );
 };

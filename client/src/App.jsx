@@ -14,9 +14,13 @@ import CheckoutPage from "./pages/CheckoutPage";
 import OrderSuccess from "./pages/OrderSuccess";
 import PaymentPage from "./pages/PaymentPage";
 
+// Admin Pages
+import AdminOrders from "./pages/admin/AdminOrders";
+
 // Components
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./routes/AdminRoute"; 
 
 function App() {
   return (
@@ -54,13 +58,23 @@ function App() {
           }
         />
 
-        {/* Order Success */}
+        {/* Order Success (LOGIN REQUIRED) */}
         <Route
           path="/order-success"
           element={
             <ProtectedRoute>
               <OrderSuccess />
             </ProtectedRoute>
+          }
+        />
+
+        {/* ADMIN ONLY */}
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminRoute>
+              <AdminOrders />
+            </AdminRoute>
           }
         />
 

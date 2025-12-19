@@ -4,3 +4,4 @@ export const getMenuByRestaurant = async (restaurantId) => {
   );
   return res.json();
 };
+ 

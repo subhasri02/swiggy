@@ -1,4 +1,6 @@
 
+
+
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
@@ -11,9 +13,11 @@ const orderSchema = new mongoose.Schema(
 
     items: [
       {
+        id: String,
         name: String,
         price: Number,
         quantity: Number,
+        image: String,
       },
     ],
 
@@ -24,15 +28,21 @@ const orderSchema = new mongoose.Schema(
 
     paymentMethod: {
       type: String,
-      required: true,
+      default: "COD",
     },
 
     address: {
+      type: String, // or Object if you want later
+      default: "N/A",
+    },
+
+    status: {
       type: String,
-      required: true,
+      default: "Pending",
     },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Order", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+export default Order;
