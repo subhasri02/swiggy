@@ -1,36 +1,28 @@
 
-
-
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useState, useEffect } from "react";
+import {
+  CardElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 
 const PaymentPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { cart, clearCart } = useCart();
 
+  const stripe = useStripe();
+  const elements = useElements();
+
   const [method, setMethod] = useState("UPI");
   const [loading, setLoading] = useState(false);
 
-  // Prevent direct access + force login
+  /* =========================
+     🔒 PROTECT ROUTE
+  ========================= */
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Please login to place order");
-      navigate("/signin"); // or home page
-      return;
-    }
-
-    if (!state) {
-      navigate("/");
-    }
-  }, [state, navigate]);
-
-  if (!state) return null;
-
-  const payNow = async () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -39,44 +31,113 @@ const PaymentPage = () => {
       return;
     }
 
+    if (!state) navigate("/");
+  }, [state, navigate]);
+
+  if (!state) return null;
+
+  /*PLACE ORDER (COMMON) */
+  const onPaymentSuccess = async (paymentId = null) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch("http://localhost:8000/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        items: cart,
+        totalAmount: state.total,
+        paymentMethod: method,
+        paymentId,
+        address: state.address,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Order failed");
+      return;
+    }
+
+    clearCart();
+    navigate("/order-success", {
+      state: { orderId: data.order._id },
+    });
+  };
+
+  /*  STRIPE CARD PAYMENT */
+  const handleCardPayment = async () => {
+    if (!stripe || !elements) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      /* Create payment intent */
+      const res = await fetch(
+        "http://localhost:8000/api/payment/create-payment-intent",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            amount: state.total, // backend converts to paise
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.message || "Payment init failed");
+        return;
+      }
+
+      const { clientSecret } = await res.json();
+
+      /* Confirm card payment */
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+        },
+      });
+
+      if (result.error) {
+        alert(result.error.message);
+        return;
+      }
+
+      if (result.paymentIntent.status === "succeeded") {
+        await onPaymentSuccess(result.paymentIntent.id);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Payment failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /*  PAY NOW*/
+  const payNow = () => {
     if (cart.length === 0) {
       alert("Cart is empty");
       return;
     }
 
-    try {
-      setLoading(true);
-
-      const res = await fetch("http://localhost:8000/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          items: cart,
-          totalAmount: state.total,
-          paymentMethod: method,
-          address: state.address,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Order failed");
-        return;
-      }
-
-      clearCart();
-      navigate("/order-success", {
-        state: { orderId: data.order._id },
-      });
-    } catch (error) {
-      console.error("Order error:", error);
-      alert("Something went wrong while placing order");
-    } finally {
-      setLoading(false);
+    if (method === "Card") {
+      handleCardPayment();
+    } else {
+      onPaymentSuccess(); // UPI / COD
     }
   };
 
@@ -97,6 +158,12 @@ const PaymentPage = () => {
             {m}
           </label>
         ))}
+
+        {method === "Card" && (
+          <div className="mt-4 p-3 border rounded">
+            <CardElement options={{ hidePostalCode: true }} />
+          </div>
+        )}
       </div>
 
       <div className="bg-white p-4 rounded-xl shadow flex justify-between items-center">
@@ -107,7 +174,7 @@ const PaymentPage = () => {
           disabled={loading}
           className="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold disabled:opacity-50"
         >
-          {loading ? "Placing Order..." : "Pay & Place Order"}
+          {loading ? "Processing..." : "Pay & Place Order"}
         </button>
       </div>
     </div>

@@ -4,9 +4,7 @@ import bcrypt from "bcryptjs";
 import genToken from "../utils/token.js";
 import { sendOtpMail } from "../utils/mail.js";
 
-/* =========================
-   SIGN UP
-========================= */
+/* SIGN UP */
 export const signUp = async (req, res) => {
   try {
     const { fullName, email, password, mobile, role } = req.body;
@@ -45,7 +43,7 @@ export const signUp = async (req, res) => {
       message: "User registered successfully",
       token,
       user: {
-        _id: user._id,          // ✅ consistent
+        _id: user._id,          //  consistent
         fullName: user.fullName,
         email: user.email,
         role: user.role,
@@ -57,9 +55,7 @@ export const signUp = async (req, res) => {
   }
 };
 
-/* =========================
-   SIGN IN
-========================= */
+/* SIGN IN*/
 export const signIn = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -81,7 +77,7 @@ export const signIn = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        _id: user._id,          // ✅ consistent
+        _id: user._id,          // consistent
         fullName: user.fullName,
         email: user.email,
         role: user.role,
@@ -93,9 +89,7 @@ export const signIn = async (req, res) => {
   }
 };
 
-/* =========================
-   SIGN OUT
-========================= */
+/*SIGN OUT */
 export const signOut = async (req, res) => {
   return res.status(200).json({
     success: true,
@@ -103,9 +97,7 @@ export const signOut = async (req, res) => {
   });
 };
 
-/* =========================
-   SEND OTP
-========================= */
+/*SEND OTP*/
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -134,9 +126,7 @@ export const sendOtp = async (req, res) => {
   }
 };
 
-/* =========================
-   VERIFY OTP
-========================= */
+/* VERIFY OTP */
 export const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -166,9 +156,7 @@ export const verifyOtp = async (req, res) => {
   }
 };
 
-/* =========================
-   RESET PASSWORD
-========================= */
+/*RESET PASSWORD */
 export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;

@@ -11,3 +11,4 @@ const genToken = (userId, role) => {
 };
 
 export default genToken;
+

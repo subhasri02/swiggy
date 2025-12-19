@@ -186,7 +186,7 @@ export default function FoodDelivery({ /*cartItems, setCartItems*/ }) {
         </button>
       </div>
 
-      {/* ---------- Restaurant Grid ---------- */}
+      {/* Restaurant Grid */}
       <div className="px-6 mt-6">
         {loading ? (
           <p className="text-center text-gray-500 text-lg py-10">Loading restaurants...</p>

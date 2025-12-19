@@ -8,9 +8,7 @@ import { sendOrderConfirmationMail } from "../utils/mail.js";
 
 const router = express.Router();
 
-/* =========================
-   PLACE ORDER (LOGIN ONLY)
-========================= */
+/* PLACE ORDER (LOGIN ONLY)*/
 router.post("/", protect, async (req, res) => {
   try {
     const { items, totalAmount, paymentMethod, address } = req.body;
@@ -60,9 +58,7 @@ router.post("/", protect, async (req, res) => {
   }
 });
 
-/* =========================
-   GET MY ORDERS (USER)
-========================= */
+/*GET MY ORDERS (USER)*/
 router.get("/my-orders", protect, async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.userId })
@@ -74,9 +70,7 @@ router.get("/my-orders", protect, async (req, res) => {
   }
 });
 
-/* =========================
-   ADMIN: GET ALL ORDERS
-========================= */
+/*ADMIN: GET ALL ORDERS*/
 router.get("/admin/orders", protect, adminOnly, async (req, res) => {
   try {
     const orders = await Order.find()
@@ -89,9 +83,7 @@ router.get("/admin/orders", protect, adminOnly, async (req, res) => {
   }
 });
 
-/* =========================
-   ADMIN: UPDATE ORDER STATUS
-========================= */
+/* ADMIN: UPDATE ORDER STATUS */
 router.put("/admin/orders/:id", protect, adminOnly, async (req, res) => {
   try {
     const { status } = req.body;

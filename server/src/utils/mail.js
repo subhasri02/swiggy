@@ -6,9 +6,9 @@ import nodemailer from "nodemailer";
 
 dotenv.config();
 
-/* =========================
+/* 
    MAIL TRANSPORTER
-========================= */
+*/
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -26,9 +26,7 @@ transporter.verify((error) => {
   }
 });
 
-/* =========================
-   SEND OTP MAIL
-========================= */
+/*SEND OTP MAIL */
 export const sendOtpMail = async (to, otp) => {
   await transporter.sendMail({
     from: `"FoodBite Support" <${process.env.EMAIL}>`,
@@ -45,9 +43,7 @@ export const sendOtpMail = async (to, otp) => {
   console.log("✅ OTP mail sent to", to);
 };
 
-/* =========================
-   SEND ORDER CONFIRMATION
-========================= */
+/*SEND ORDER CONFIRMATION */
 export const sendOrderConfirmationMail = async (email, order) => {
   const itemsHtml = order.items
     .map(

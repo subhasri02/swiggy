@@ -25,16 +25,16 @@ export const fetchRestaurants = async () => {
   }
 };
 
-// Fetch single restaurant menu => not fetching
-export const fetchRestaurantMenu = async (restaurantId) => {
-  try {
-    const res = await fetch(
-      `${BASE_URL}/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${DEFAULT_COORDS.lat}&lng=${DEFAULT_COORDS.lng}&restaurantId=${restaurantId}`
-    );
-    const data = await res.json();
-    return data?.data;
-  } catch (error) {
-    console.error("Error fetching menu:", error);
-    return null;
-  }
-};
+// // Fetch single restaurant menu => not fetching
+// export const fetchRestaurantMenu = async (restaurantId) => {
+//   try {
+//     const res = await fetch(
+//       `${BASE_URL}/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${DEFAULT_COORDS.lat}&lng=${DEFAULT_COORDS.lng}&restaurantId=${restaurantId}`
+//     );
+//     const data = await res.json();
+//     return data?.data;
+//   } catch (error) {
+//     console.error("Error fetching menu:", error);
+//     return null;
+//   }
+// };

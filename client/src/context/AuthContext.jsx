@@ -57,9 +57,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-/* =========================
-    USE AUTH HOOK
-========================= */
+/* USE AUTH HOOK*/
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) {
