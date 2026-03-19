@@ -1,3 +1,5 @@
+
+
 import express from "express";
 import protect from "../middlewares/auth.middleware.js";
 import adminOnly from "../middlewares/admin.middleware.js";
@@ -12,9 +14,16 @@ const router = express.Router();
 router.post("/menu", protect, adminOnly, async (req, res) => {
   try {
     const menu = await Menu.create(req.body);
-    res.status(201).json(menu);
+    res.status(201).json({
+      success: true,
+      menu,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Failed to add menu" });
+    console.error("Add menu error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to add menu",
+    });
   }
 });
 
@@ -27,9 +36,18 @@ router.get("/orders", protect, adminOnly, async (req, res) => {
       .populate("userId", "fullName email mobile")
       .sort({ createdAt: -1 });
 
-    res.status(200).json(orders);
+    // ✅ ALWAYS RETURN ARRAY INSIDE `orders`
+    res.status(200).json({
+      success: true,
+      orders,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Failed to fetch orders" });
+    console.error("Fetch orders error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch orders",
+      orders: [], // ✅ prevent frontend crash
+    });
   }
 });
 
@@ -38,19 +56,31 @@ router.get("/orders", protect, adminOnly, async (req, res) => {
 ========================= */
 router.put("/orders/:id", protect, adminOnly, async (req, res) => {
   try {
+    const { status } = req.body;
+
     const order = await Order.findByIdAndUpdate(
       req.params.id,
-      { status: req.body.status },
+      { status },
       { new: true }
     );
 
     if (!order) {
-      return res.status(404).json({ message: "Order not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
     }
 
-    res.status(200).json(order);
+    res.status(200).json({
+      success: true,
+      order,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Failed to update order" });
+    console.error("Update order error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update order",
+    });
   }
 });
 

@@ -8,6 +8,9 @@ import authRouter from "./src/routes/auth.routes.js";
 import menuRouter from "./src/routes/menu.routes.js";
 import orderRouter from "./src/routes/order.routes.js";
 import adminRouter from "./src/routes/admin.routes.js"; 
+import paymentRouter from "./src/routes/payment.routes.js";
+
+
 
 dotenv.config();
 
@@ -37,6 +40,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/menu", menuRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/admin", adminRouter); 
+app.use("/api/payments", paymentRouter);
 
 /* =========================
    START SERVER

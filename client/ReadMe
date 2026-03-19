@@ -24,16 +24,6 @@ A Swiggy-inspired food delivery frontend built using React and Tailwind CSS. Thi
 
 ---
 
-## 📸 Screenshots
-
-### 🏠 Home Page
-![Home Page](./screenshots/home1.png)
-
-### 🍴 Restaurant Listing
-![Restaurant List](./screenshots/home2.png)
-
----
-
 ## 📁 Project Structure
 
 src/
