@@ -1,0 +1,110 @@
+# 🍔 Swiggy Clone - Frontend
+
+A Swiggy-inspired food delivery frontend built using React and Tailwind CSS. This application fetches restaurant and menu data from Swiggy APIs and displays it in a modern, responsive UI.
+
+---
+
+## 🚀 Tech Stack
+
+- React (Vite)
+- JavaScript (ES6+)
+- Tailwind CSS
+- React Router DOM
+
+---
+
+## ✨ Features
+
+- 🍽️ Restaurant Listing
+- 🔍 Search Functionality
+- 📋 Dynamic Menu Display
+- 🛒 Add to Cart UI
+- ⚡ Fast and Responsive Design
+- 🎨 Clean UI inspired by Swiggy
+
+---
+
+## 📸 Screenshots
+
+### 🏠 Home Page
+![Home Page](./screenshots/home1.png)
+
+### 🍴 Restaurant Listing
+![Restaurant List](./screenshots/home2.png)
+
+---
+
+## 📁 Project Structure
+
+src/
+ ├── components/
+ ├── pages/
+ ├── utils/
+ ├── App.jsx
+ ├── main.jsx
+
+---
+
+## ▶️ Getting Started
+
+### 1️⃣ Clone the repository
+
+git clone https://github.com/your-username/swiggy-clone.git  
+cd swiggy-clone  
+
+---
+
+### 2️⃣ Install dependencies
+
+npm install  
+
+---
+
+### 3️⃣ Run the development server
+
+npm run dev  
+
+---
+
+## 🌐 API Usage (IMPORTANT)
+
+This project uses Swiggy’s public API endpoints.
+
+⚠️ Since Swiggy APIs block direct requests due to CORS policy, you must use a browser extension.
+
+---
+
+## 🔧 CORS Setup
+
+Install a CORS extension in your browser:
+
+👉 Chrome Extension:  
+"Allow CORS: Access-Control-Allow-Origin"
+
+Steps:
+1. Install the extension  
+2. Turn ON the extension  
+3. Reload your app  
+
+---
+
+## ⚠️ Note
+
+- This project is for **learning purposes only**
+- Swiggy APIs are unofficial and may change anytime
+- Use responsibly
+
+---
+
+## 📌 Future Improvements
+
+- 🔐 User Authentication
+- 🛒 Backend Cart Integration
+- 📦 Order Placement
+- 📱 Mobile Optimization
+
+---
+
+## 👩‍💻 Author
+
+Subhasri Viswanadhuni

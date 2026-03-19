@@ -25,7 +25,7 @@ export default function Navbar({ searchQuery = "", setSearchQuery }) {
 
   const handleLogout = () => {
     logout();
-    clearCart(); // 🔥 optional but recommended
+    clearCart(); //  for clearing the cart
     navigate("/");
   };
 
